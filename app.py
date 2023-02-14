@@ -425,7 +425,7 @@ def newOrder():
         userId = cur.fetchone()[0]
         cur.execute("SELECT num FROM kart WHERE userId = %s AND productId = %s", (userId, productId))
         num = cur.fetchone()[0]
-        orderId = int(time.time() * 100) * 10000 + productId
+        orderId = int(time.time()) + productId
         print(userId, " ", num, " ", orderId)
         try:
             cur.execute("INSERT INTO orders (orderId, userId, productId, num) VALUES (%s, %s, %s, %s)", (orderId, userId, productId, num))
@@ -456,7 +456,7 @@ def newAllOrder():
             for order in orders:
                 num = order[0]
                 productId = order[1]
-                orderId = int(time.time() * 100) * 10000 + productId
+                orderId = int(time.time()) + productId
                 cur.execute("INSERT INTO orders (orderId, userId, productId, num) VALUES (%s, %s, %s, %s)", (orderId, userId, productId, num))
                 cur.execute("DELETE FROM kart WHERE userId = %s AND productId = %s", (userId, productId))
             conn.commit()
