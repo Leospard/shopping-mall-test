@@ -132,7 +132,7 @@ def init():
 
         except Exception as e:
             conn.rollback()
-            flash(e)
+            flash(str(e))
 
     return redirect(url_for('root'))
 
@@ -142,13 +142,16 @@ def root():
     loggedIn, firstName, noOfItems = getLoginDetails()
     with pymysql.connect(host=os.environ['MYSQL_ENDPOINT'], port=int(os.environ['MYSQL_PORT']), user=os.environ['MYSQL_USER'],
             passwd=os.environ['MYSQL_PASSWORD'], db=os.environ['MYSQL_DBNAME'], connect_timeout=5) as conn:
-        cur = conn.cursor()
-        cur.execute('SELECT productId, name, price, description, image, stock FROM products')
-        itemData = cur.fetchall()
-        cur.execute('SELECT categoryId, name FROM categories')
-        categoryData = cur.fetchall()
-    if len(itemData) > 9:
-        itemData = itemData[0:9]
+        try:
+            cur = conn.cursor()
+            cur.execute('SELECT productId, name, price, description, image, stock FROM products')
+            itemData = cur.fetchall()
+            cur.execute('SELECT categoryId, name FROM categories')
+            categoryData = cur.fetchall()
+            if len(itemData) > 9:
+                itemData = itemData[0:9]
+        except Exception as e:
+            return render_template('error.html')
     return render_template('index.html', itemData=itemData, loggedIn=loggedIn, firstName=firstName, noOfItems=noOfItems, categoryData=categoryData)
 
 @app.route("/add")
@@ -160,7 +163,7 @@ def admin():
             cur.execute("SELECT categoryId, name FROM categories")
             categories = cur.fetchall()
         except Exception as e:
-            flash(e)
+            flash(str(e))
     return render_template('add.html', categories=categories)
 
 @app.route("/addItem", methods=["GET", "POST"])
@@ -188,7 +191,7 @@ def addItem():
             except Exception as e:
                 msg="error occured"
                 conn.rollback()
-                flash(e)
+                flash(str(e))
         print(msg)
         return redirect(url_for('root'))
 
@@ -214,7 +217,7 @@ def removeItem():
         except Exception as e:
             conn.rollback()
             msg = "Error occured"
-            flash(e)
+            flash(str(e))
     print(msg)
     return redirect(url_for('root'))
 
