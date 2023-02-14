@@ -83,42 +83,57 @@ def init():
     with pymysql.connect(host=os.environ['MYSQL_ENDPOINT'], port=int(os.environ['MYSQL_PORT']), user=os.environ['MYSQL_USER'],
             passwd=os.environ['MYSQL_PASSWORD'], db=os.environ['MYSQL_DBNAME'], connect_timeout=5) as conn:
         # Create table
-        cur = conn.cursor()
-        cur.execute("CREATE TABLE users (userId INTEGER AUTO_INCREMENT PRIMARY KEY, password TEXT, email TEXT, firstName TEXT, lastName TEXT, phone TEXT)")
-        cur.execute("CREATE TABLE categories (categoryId INTEGER PRIMARY KEY, name TEXT)")
-        cur.execute("CREATE TABLE orders (orderId INTEGER PRIMARY KEY, userId INTEGER, productId INTEGER, num INTEGER)")
-        cur.execute("CREATE TABLE products (productId INTEGER AUTO_INCREMENT PRIMARY KEY, name TEXT, price REAL, description TEXT, image TEXT, stock INTEGER, categoryId INTEGER, FOREIGN KEY(categoryId) REFERENCES categories(categoryId))")
-        cur.execute("CREATE TABLE kart (userId INTEGER, productId INTEGER, num INTEGER, FOREIGN KEY(userId) REFERENCES users(userId), FOREIGN KEY(productId) REFERENCES products(productId))")
-        
-        cur.execute("INSERT INTO categories (categoryId, name) VALUES (%s, %s)", (1, 'Men\'s'))
-        cur.execute("INSERT INTO categories (categoryId, name) VALUES (%s, %s)", (2, 'Women\'s'))
-        cur.execute("INSERT INTO categories (categoryId, name) VALUES (%s, %s)", (3, 'HeadPhones'))
-        cur.execute("INSERT INTO categories (categoryId, name) VALUES (%s, %s)", (4, 'Computers'))
-        cur.execute("INSERT INTO categories (categoryId, name) VALUES (%s, %s)", (5, 'CellPhones'))
-        cur.execute("INSERT INTO categories (categoryId, name) VALUES (%s, %s)", (6, 'Snacks'))
-        cur.execute("INSERT INTO categories (categoryId, name) VALUES (%s, %s)", (7, 'Drinks'))
-        cur.execute("INSERT INTO categories (categoryId, name) VALUES (%s, %s)", (8, 'CookedFoods'))
-        cur.execute("INSERT INTO categories (categoryId, name) VALUES (%s, %s)", (9, 'Basketball'))
-        cur.execute("INSERT INTO categories (categoryId, name) VALUES (%s, %s)", (10, 'Tennis'))
-        cur.execute("INSERT INTO categories (categoryId, name) VALUES (%s, %s)", (11, 'Golf'))
-        cur.execute("INSERT INTO categories (categoryId, name) VALUES (%s, %s)", (12, 'Clothing'))
-        cur.execute("INSERT INTO categories (categoryId, name) VALUES (%s, %s)", (13, 'Camping'))
-        cur.execute("INSERT INTO categories (categoryId, name) VALUES (%s, %s)", (14, 'Cycling'))
+        try:
+            cur = conn.cursor()
+            cur.execute("CREATE TABLE users (userId INTEGER AUTO_INCREMENT PRIMARY KEY, password TEXT, email TEXT, firstName TEXT, lastName TEXT, phone TEXT)")
+            cur.execute("CREATE TABLE categories (categoryId INTEGER PRIMARY KEY, name TEXT)")
+            cur.execute("CREATE TABLE orders (orderId INTEGER PRIMARY KEY, userId INTEGER, productId INTEGER, num INTEGER)")
+            cur.execute("CREATE TABLE products (productId INTEGER AUTO_INCREMENT PRIMARY KEY, name TEXT, price REAL, description TEXT, image TEXT, stock INTEGER, categoryId INTEGER, FOREIGN KEY(categoryId) REFERENCES categories(categoryId))")
+            cur.execute("CREATE TABLE kart (userId INTEGER, productId INTEGER, num INTEGER, FOREIGN KEY(userId) REFERENCES users(userId), FOREIGN KEY(productId) REFERENCES products(productId))")
+            
+            cur.execute("INSERT INTO categories (categoryId, name) VALUES (%s, %s)", (1, 'Men\'s'))
+            cur.execute("INSERT INTO categories (categoryId, name) VALUES (%s, %s)", (2, 'Women\'s'))
+            cur.execute("INSERT INTO categories (categoryId, name) VALUES (%s, %s)", (3, 'HeadPhones'))
+            cur.execute("INSERT INTO categories (categoryId, name) VALUES (%s, %s)", (4, 'Computers'))
+            cur.execute("INSERT INTO categories (categoryId, name) VALUES (%s, %s)", (5, 'CellPhones'))
+            cur.execute("INSERT INTO categories (categoryId, name) VALUES (%s, %s)", (6, 'Snacks'))
+            cur.execute("INSERT INTO categories (categoryId, name) VALUES (%s, %s)", (7, 'Drinks'))
+            cur.execute("INSERT INTO categories (categoryId, name) VALUES (%s, %s)", (8, 'CookedFoods'))
+            cur.execute("INSERT INTO categories (categoryId, name) VALUES (%s, %s)", (9, 'Basketball'))
+            cur.execute("INSERT INTO categories (categoryId, name) VALUES (%s, %s)", (10, 'Tennis'))
+            cur.execute("INSERT INTO categories (categoryId, name) VALUES (%s, %s)", (11, 'Golf'))
+            cur.execute("INSERT INTO categories (categoryId, name) VALUES (%s, %s)", (12, 'Clothing'))
+            cur.execute("INSERT INTO categories (categoryId, name) VALUES (%s, %s)", (13, 'Camping'))
+            cur.execute("INSERT INTO categories (categoryId, name) VALUES (%s, %s)", (14, 'Cycling'))
 
-        password = '12345678'
-        email = '11111@qq.com'
-        firstName = 'Admin'
-        lastName = 'Tony'
-        phone = '10101010'
-        cur.execute("INSERT INTO users (userId, password, email, firstName, lastName, phone) VALUES (%s, %s, %s, %s, %s, %s)", ("1", hashlib.md5(password.encode()).hexdigest(), email, firstName, lastName, phone))
-        password = '12345678'
-        email = '22222@qq.com'
-        firstName = 'Admin2'
-        lastName = 'Ben'
-        phone = '1010101'
-        cur.execute("INSERT INTO users (userId, password, email, firstName, lastName, phone) VALUES (%s, %s, %s, %s, %s, %s)",
-                    ("2", hashlib.md5(password.encode()).hexdigest(), email, firstName, lastName, phone))
-        conn.commit()
+            password = '12345678'
+            email = '11111@qq.com'
+            firstName = 'Admin'
+            lastName = 'Tony'
+            phone = '10101010'
+            cur.execute("INSERT INTO users (userId, password, email, firstName, lastName, phone) VALUES (%s, %s, %s, %s, %s, %s)", ("1", hashlib.md5(password.encode()).hexdigest(), email, firstName, lastName, phone))
+            password = '12345678'
+            email = '22222@qq.com'
+            firstName = 'Admin2'
+            lastName = 'Ben'
+            phone = '1010101'
+            cur.execute("INSERT INTO users (userId, password, email, firstName, lastName, phone) VALUES (%s, %s, %s, %s, %s, %s)",
+                        ("2", hashlib.md5(password.encode()).hexdigest(), email, firstName, lastName, phone))
+            
+            cur.execute("INSERT INTO products (name, price, description, image, stock, categoryId) VALUES (%s, %s, %s, %s, %s, %s)",
+                        ("Basketball", "120", "A nice basketball!", "basketball_1.jpg", "101", "9"))
+            cur.execute("INSERT INTO products (name, price, description, image, stock, categoryId) VALUES (%s, %s, %s, %s, %s, %s)",
+                        ("Beats EP", "2000", "A nice earphone!", "beats_ep.png", "16", "3"))
+            cur.execute("INSERT INTO products (name, price, description, image, stock, categoryId) VALUES (%s, %s, %s, %s, %s, %s)",
+                        ("Beats studio3", "3000", "Another nice earphone!", "beats_studio3.png", "5", "3"))
+
+            conn.commit()
+            flash("initialize database successfully")
+
+        except Exception as e:
+            conn.rollback()
+            flash(e)
+
     return redirect(url_for('root'))
 
 
@@ -140,9 +155,12 @@ def root():
 def admin():
     with pymysql.connect(host=os.environ['MYSQL_ENDPOINT'], port=int(os.environ['MYSQL_PORT']), user=os.environ['MYSQL_USER'],
             passwd=os.environ['MYSQL_PASSWORD'], db=os.environ['MYSQL_DBNAME'], connect_timeout=5) as conn:
-        cur = conn.cursor()
-        cur.execute("SELECT categoryId, name FROM categories")
-        categories = cur.fetchall()
+        try:
+            cur = conn.cursor()
+            cur.execute("SELECT categoryId, name FROM categories")
+            categories = cur.fetchall()
+        except Exception as e:
+            flash(e)
     return render_template('add.html', categories=categories)
 
 @app.route("/addItem", methods=["GET", "POST"])
@@ -167,9 +185,10 @@ def addItem():
                 cur.execute("INSERT INTO products (name, price, description, image, stock, categoryId) VALUES (%s, %s, %s, %s, %s, %s)", (name, price, description, imagename, stock, categoryId))
                 conn.commit()
                 msg="added successfully"
-            except:
+            except Exception as e:
                 msg="error occured"
                 conn.rollback()
+                flash(e)
         print(msg)
         return redirect(url_for('root'))
 
@@ -192,9 +211,10 @@ def removeItem():
             cur.execute('DELETE FROM products WHERE productID = %s', (productId, ))
             conn.commit()
             msg = "Deleted successsfully"
-        except:
+        except Exception as e:
             conn.rollback()
             msg = "Error occured"
+            flash(e)
     print(msg)
     return redirect(url_for('root'))
 
