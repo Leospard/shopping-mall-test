@@ -474,18 +474,19 @@ def orders():
         cur.execute("SELECT userId FROM users WHERE email = %s", (email, ))
         userId = cur.fetchone()[0]
         cur.execute("SELECT orders.num, orders.orderId, products.name, products.price FROM products, orders WHERE products.productId = orders.productId AND orders.userId = %s", (userId, ))
-        orderss = cur.fetchall()
-    for i,row in enumerate(orderss):
+        orders = cur.fetchall()
+    for i,row in enumerate(orders):
         partialPrice = row[0] * row[3]
         time_stamp = int(row[1] / 1000000)
         time_array = time.localtime(time_stamp)
         str_date = time.strftime("%Y-%m-%d %H:%M:%S", time_array)
         color = random_color()
-        orderss[i] = (row[0], row[1], row[2], row[3], partialPrice, str_date, color)
+        orders[i] = list(orders[i])
+        orders[i] = [row[0], row[1], row[2], row[3], partialPrice, str_date, color]
     existOrder = False
-    if len(orderss) > 0:
+    if len(orders) > 0:
         existOrder = True
-    return render_template("order.html", orderss=orderss, existOrder=existOrder, loggedIn=loggedIn, firstName=firstName, noOfItems=noOfItems)
+    return render_template("order.html", orders=orders, existOrder=existOrder, loggedIn=loggedIn, firstName=firstName, noOfItems=noOfItems)
 
 if __name__=="__main__":
     app.run(debug=True)
