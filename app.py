@@ -374,15 +374,15 @@ def cart():
         cur.execute("SELECT products.productId, products.name, products.price, products.image, kart.num FROM products, kart WHERE products.productId = kart.productId AND kart.userId = %s", (userId, ))
         products = cur.fetchall()
     totalPrice = 0
+    productList = []
     for i,row in enumerate(products):
         partialPrice = row[2] * row[4]
-        products[i] = list(products[i])
-        products[i] = [row[0], row[1], row[2], row[3], row[4], partialPrice]
+        productList.append([row[0], row[1], row[2], row[3], row[4], partialPrice])
         totalPrice += partialPrice
     existItem = False
     if noOfItems > 0:
         existItem = True
-    return render_template("cart.html", products = products, totalPrice=totalPrice, existItem=existItem, loggedIn=loggedIn, firstName=firstName, noOfItems=noOfItems)
+    return render_template("cart.html", products = productList, totalPrice=totalPrice, existItem=existItem, loggedIn=loggedIn, firstName=firstName, noOfItems=noOfItems)
 
 @app.route("/removeFromCart")
 def removeFromCart():
@@ -475,18 +475,18 @@ def orders():
         userId = cur.fetchone()[0]
         cur.execute("SELECT orders.num, orders.orderId, products.name, products.price FROM products, orders WHERE products.productId = orders.productId AND orders.userId = %s", (userId, ))
         orders = cur.fetchall()
+    orderList=[]
     for i,row in enumerate(orders):
         partialPrice = row[0] * row[3]
         time_stamp = int(row[1] / 1000000)
         time_array = time.localtime(time_stamp)
         str_date = time.strftime("%Y-%m-%d %H:%M:%S", time_array)
         color = random_color()
-        orders[i] = list(orders[i])
-        orders[i] = [row[0], row[1], row[2], row[3], partialPrice, str_date, color]
+        orderList.append([row[0], row[1], row[2], row[3], partialPrice, str_date, color])
     existOrder = False
     if len(orders) > 0:
         existOrder = True
-    return render_template("order.html", orders=orders, existOrder=existOrder, loggedIn=loggedIn, firstName=firstName, noOfItems=noOfItems)
+    return render_template("order.html", orders=orderList, existOrder=existOrder, loggedIn=loggedIn, firstName=firstName, noOfItems=noOfItems)
 
 if __name__=="__main__":
     app.run(debug=True)
