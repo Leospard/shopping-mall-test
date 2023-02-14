@@ -132,7 +132,7 @@ def init():
 
         except Exception as e:
             conn.rollback()
-            flash(e)
+            flash(str(e))
 
     return redirect(url_for('root'))
 
@@ -160,7 +160,7 @@ def admin():
             cur.execute("SELECT categoryId, name FROM categories")
             categories = cur.fetchall()
         except Exception as e:
-            flash(e)
+            flash(str(e))
     return render_template('add.html', categories=categories)
 
 @app.route("/addItem", methods=["GET", "POST"])
@@ -188,7 +188,7 @@ def addItem():
             except Exception as e:
                 msg="error occured"
                 conn.rollback()
-                flash(e)
+                flash(str(e))
         print(msg)
         return redirect(url_for('root'))
 
@@ -214,7 +214,7 @@ def removeItem():
         except Exception as e:
             conn.rollback()
             msg = "Error occured"
-            flash(e)
+            flash(str(e))
     print(msg)
     return redirect(url_for('root'))
 
