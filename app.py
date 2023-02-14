@@ -355,7 +355,8 @@ def addToCart():
                 cur.execute("INSERT INTO kart (userId, productId, num) VALUES (%s, %s, %s)", (userId, productId, 1))
             conn.commit()
             flash("Added successfully")
-        except:
+        except Exception as e:
+            print(e)
             conn.rollback()
             flash("Error occured")
     return redirect_back()
@@ -406,7 +407,8 @@ def removeFromCart():
                 cur.execute("DELETE FROM kart WHERE userId = %s AND productId = %s", (userId, productId))
             conn.commit()
             flash("removed successfully")
-        except:
+        except Exception as e:
+            print(e)
             conn.rollback()
             flash("error occured")
     return redirect_back()
@@ -424,12 +426,14 @@ def newOrder():
         cur.execute("SELECT num FROM kart WHERE userId = %s AND productId = %s", (userId, productId))
         num = cur.fetchone()[0]
         orderId = int(time.time() * 100) * 10000 + productId
+        print(userId, " ", num, " ", orderId)
         try:
             cur.execute("INSERT INTO orders (orderId, userId, productId, num) VALUES (%s, %s, %s, %s)", (orderId, userId, productId, num))
             cur.execute("DELETE FROM kart WHERE userId = %s AND productId = %s", (userId, productId))
             conn.commit()
             flash("Trade successfully")
-        except:
+        except Exception as e:
+            print(e)
             conn.rollback()
             flash("Trade failed")
     return redirect(url_for('orders'))
