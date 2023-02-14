@@ -151,7 +151,6 @@ def root():
             if len(itemData) > 9:
                 itemData = itemData[0:9]
         except Exception as e:
-            flash(str(e))
             return render_template('error.html')
     return render_template('index.html', itemData=itemData, loggedIn=loggedIn, firstName=firstName, noOfItems=noOfItems, categoryData=categoryData)
 
